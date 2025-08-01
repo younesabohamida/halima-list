@@ -1,0 +1,21 @@
+{
+  "name": "Halima List",
+  "short_name": "Halima",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#6a11cb",
+  "theme_color": "#6a11cb",
+  "description": "تطبيق لإدارة المهام والمواعيد",
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ]
+}
