@@ -2,13 +2,8 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <meta name="theme-color" content="#6a11cb">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Halima List</title>
-    <link rel="manifest" href="manifest.webmanifest">
-    <link rel="apple-touch-icon" href="icons/icon-192.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <style>
@@ -23,124 +18,72 @@
             --task-high: #ff6b6b;
             --appointment: #1dd1a1;
             --shopping: #5f27cd;
-            --appointment-time: #2e86de;
-            --notification: #ff9f43;
-            --safe-area-inset-bottom: env(safe-area-inset-bottom, 0px);
+            --border: #e0e0e0;
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            -webkit-tap-highlight-color: transparent;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
         body {
             background: linear-gradient(135deg, var(--primary), var(--secondary));
             min-height: 100vh;
             color: var(--dark);
-            overflow-x: hidden;
-            transition: all 0.3s ease;
-            padding-bottom: var(--safe-area-inset-bottom);
         }
 
         .app-container {
             max-width: 100%;
             width: 100%;
             min-height: 100vh;
-            background: rgba(255, 255, 255, 0.97);
-            backdrop-filter: blur(10px);
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-            position: relative;
+            background: white;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
         }
 
-        /* الترويسة */
         .app-header {
             background: linear-gradient(to right, var(--primary), var(--secondary));
             color: white;
-            padding: 1.2rem;
-            padding-top: calc(1.2rem + env(safe-area-inset-top, 0px));
-            text-align: center;
+            padding: 1rem 1.5rem;
             position: relative;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .app-title {
-            font-size: 1.8rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
+            font-size: 1.5rem;
+            font-weight: 600;
+            text-align: center;
+            flex-grow: 1;
         }
 
-        /* قائمة اللغة المنسدلة */
-        .language-dropdown {
+        .language-selector-container {
             position: absolute;
-            top: calc(1rem + env(safe-area-inset-top, 0px));
             left: 1rem;
-            z-index: 10;
         }
 
-        .language-toggle {
-            background: rgba(255, 255, 255, 0.2);
+        .language-selector {
+            background: rgba(255,255,255,0.2);
             border: none;
             color: white;
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            font-size: 0.9rem;
+            padding: 0.3rem 0.5rem;
+            border-radius: 5px;
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .language-toggle i {
             font-size: 0.8rem;
-            transition: transform 0.2s;
+            width: 90px;
         }
 
-        .language-toggle.open i {
-            transform: rotate(180deg);
-        }
-
-        .language-menu {
-            position: absolute;
-            top: 100%;
-            left: 0;
+        .language-selector option {
             background: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            overflow: hidden;
-            display: none;
-            min-width: 120px;
-            z-index: 1000;
-        }
-
-        .language-menu.open {
-            display: block;
-        }
-
-        .language-option {
-            padding: 0.8rem 1rem;
             color: var(--dark);
-            cursor: pointer;
-            transition: all 0.2s;
-            text-align: left;
         }
 
-        .language-option:hover {
-            background: rgba(106, 17, 203, 0.1);
-        }
-
-        .language-option.active {
-            background: rgba(106, 17, 203, 0.2);
-            font-weight: bold;
-        }
-
-        /* التبويبات */
         .tabs-container {
             display: flex;
-            background: var(--light);
-            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            background: white;
+            border-bottom: 1px solid var(--border);
         }
 
         .tab {
@@ -148,86 +91,52 @@
             padding: 1rem;
             text-align: center;
             cursor: pointer;
-            transition: all 0.3s;
             font-weight: 500;
             color: var(--dark);
-            position: relative;
+            border-bottom: 3px solid transparent;
         }
 
         .tab.active {
             color: var(--primary);
+            border-bottom-color: var(--primary);
         }
 
-        .tab.active::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 3px;
-            background: var(--primary);
-            border-radius: 3px 3px 0 0;
-        }
-
-        /* محتوى التبويبات */
         .tab-content {
             display: none;
-            padding: 1.2rem;
-            animation: fadeIn 0.3s ease;
-            padding-bottom: calc(1.2rem + var(--safe-area-inset-bottom));
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+            padding: 1.5rem;
         }
 
         .tab-content.active {
             display: block;
         }
 
-        /* عناصر التحكم */
         .input-group {
             margin-bottom: 1.5rem;
         }
 
         input, select {
             width: 100%;
-            padding: 0.9rem 1.2rem;
-            border: none;
-            border-radius: 10px;
-            background: rgba(0, 0, 0, 0.03);
+            padding: 0.8rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            margin-bottom: 1rem;
             font-size: 1rem;
-            margin-bottom: 0.8rem;
-            transition: all 0.2s;
-            border: 1px solid rgba(0, 0, 0, 0.05);
-        }
-
-        input:focus, select:focus {
-            outline: none;
-            box-shadow: 0 0 0 2px rgba(106, 17, 203, 0.2);
-            border-color: var(--primary);
         }
 
         .form-row {
             display: flex;
-            gap: 0.8rem;
-        }
-
-        .form-row input {
-            flex: 1;
+            gap: 1rem;
         }
 
         .btn {
             background: var(--primary);
             color: white;
             border: none;
-            border-radius: 10px;
-            padding: 0.9rem 1.5rem;
+            border-radius: 8px;
+            padding: 0.8rem;
             font-size: 1rem;
             font-weight: 500;
             cursor: pointer;
-            transition: all 0.2s;
             width: 100%;
             display: flex;
             align-items: center;
@@ -235,46 +144,21 @@
             gap: 0.5rem;
         }
 
-        .btn:hover {
-            opacity: 0.9;
-            transform: translateY(-1px);
-        }
-
-        .btn:active {
-            transform: translateY(0);
-        }
-
-        .install-btn {
-            background: var(--notification);
-            margin-top: 0.5rem;
-            display: none;
-        }
-
-        /* القوائم */
         .items-list {
             list-style: none;
-            max-height: calc(100vh - 300px);
+            max-height: 50vh;
             overflow-y: auto;
-            -webkit-overflow-scrolling: touch;
-            padding-bottom: 1rem;
         }
 
         .item {
             background: white;
-            border-radius: 10px;
+            border-radius: 8px;
             padding: 1rem;
-            margin-bottom: 0.8rem;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-            transition: all 0.2s;
+            margin-bottom: 1rem;
+            border: 1px solid var(--border);
             display: flex;
             align-items: center;
             position: relative;
-            overflow: hidden;
-        }
-
-        .item:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
 
         .item::before {
@@ -286,29 +170,22 @@
             height: 100%;
         }
 
-        .task-item::before { 
-            background: var(--task-medium);
-        }
-        
+        .task-item::before { background: var(--task-medium); }
         .task-item.low-priority::before { background: var(--task-low); }
-        .task-item.medium-priority::before { background: var(--task-medium); }
         .task-item.high-priority::before { background: var(--task-high); }
-        
         .appointment-item::before { background: var(--appointment); }
         .shopping-item::before { background: var(--shopping); }
 
         .item-checkbox {
-            margin-left: 0.8rem;
+            margin-left: 1rem;
             width: 20px;
             height: 20px;
-            accent-color: var(--primary);
             cursor: pointer;
-            flex-shrink: 0;
         }
 
         .item-content {
             flex: 1;
-            margin: 0 0.8rem;
+            margin: 0 1rem;
         }
 
         .item-title {
@@ -317,40 +194,18 @@
         }
 
         .item-details {
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             color: #666;
             display: flex;
-            align-items: center;
             gap: 0.5rem;
-            flex-wrap: wrap;
         }
 
         .item-badge {
             padding: 0.2rem 0.5rem;
             border-radius: 10px;
-            font-size: 0.7rem;
-            font-weight: 500;
-            background: rgba(0, 0, 0, 0.05);
+            font-size: 0.8rem;
+            background: rgba(0,0,0,0.05);
         }
-
-        .task-priority-low { background: rgba(72, 219, 251, 0.1); color: var(--task-low); }
-        .task-priority-medium { background: rgba(254, 202, 87, 0.1); color: var(--task-medium); }
-        .task-priority-high { background: rgba(255, 107, 107, 0.1); color: var(--task-high); }
-        
-        .appointment-time { 
-            background: rgba(46, 134, 222, 0.1); 
-            color: var(--appointment-time);
-            font-weight: bold;
-        }
-        
-        .notification-badge {
-            background: rgba(255, 159, 67, 0.1);
-            color: var(--notification);
-            font-weight: bold;
-            animation: pulse 2s infinite;
-        }
-        
-        .shopping-quantity { background: rgba(95, 39, 205, 0.1); color: var(--shopping); }
 
         .item-actions {
             display: flex;
@@ -362,773 +217,393 @@
             border: none;
             color: #999;
             font-size: 1rem;
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
             cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .action-btn:hover {
-            background: rgba(0, 0, 0, 0.05);
-            color: var(--primary);
         }
 
         .empty-state {
             text-align: center;
-            padding: 3rem 1rem;
+            padding: 2rem;
             color: #999;
         }
 
-        .empty-icon {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            opacity: 0.3;
-        }
-
-        /* تأثيرات الإكمال */
-        .item.completed .item-title,
-        .item.completed .item-details {
-            opacity: 0.6;
-            text-decoration: line-through;
-        }
-
-        /* تنبيه المواعيد القريبة */
-        .appointment-item.upcoming {
-            border-left: 4px solid var(--notification);
-        }
-
-        @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(255, 159, 67, 0.4); }
-            70% { box-shadow: 0 0 0 10px rgba(255, 159, 67, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(255, 159, 67, 0); }
-        }
-
-        /* إشعارات داخل التطبيق */
-        .in-app-notification {
+        .confirm-dialog {
             position: fixed;
-            bottom: calc(20px + var(--safe-area-inset-bottom));
-            right: 20px;
-            left: 20px;
-            background-color: white;
-            padding: 15px;
-            border-radius: 10px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            z-index: 1000;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            animation: fadeIn 0.3s ease;
-            border-left: 4px solid var(--notification);
+            justify-content: center;
+            z-index: 1000;
+            display: none;
         }
 
-        .close-notification {
-            background: none;
+        .confirm-content {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 400px;
+        }
+
+        .confirm-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .confirm-btn {
+            padding: 0.5rem 1rem;
             border: none;
-            font-size: 1.2rem;
+            border-radius: 5px;
             cursor: pointer;
-            color: #999;
         }
 
-        /* التكيف مع الجوال */
-        @media (max-width: 480px) {
-            .app-title {
-                font-size: 1.5rem;
-            }
-            
-            .tab {
-                padding: 0.8rem 0.5rem;
-                font-size: 0.9rem;
-            }
-            
-            .item {
-                padding: 0.8rem;
-            }
-            
-            .language-toggle {
-                padding: 0.4rem 0.8rem;
-                font-size: 0.8rem;
-            }
-            
-            .tab-content {
-                padding: 0.8rem;
-                padding-bottom: calc(0.8rem + var(--safe-area-inset-bottom));
-            }
+        .confirm-cancel {
+            background: #f1f1f1;
         }
 
-        /* التكيف مع الوضع المظلم */
-        @media (prefers-color-scheme: dark) {
-            body {
-                background: linear-gradient(135deg, #2c3e50, #4ca1af);
-            }
-            
-            .app-container {
-                background: rgba(30, 30, 30, 0.97);
-                color: #f0f0f0;
-            }
-            
-            input, select {
-                background: rgba(255, 255, 255, 0.1);
-                color: #f0f0f0;
-                border-color: rgba(255, 255, 255, 0.1);
-            }
-            
-            .item {
-                background: rgba(40, 40, 40, 0.8);
-            }
-            
-            .item-details {
-                color: #aaa;
-            }
-            
-            .empty-state {
-                color: #777;
-            }
-            
-            .language-menu {
-                background: #333;
-            }
-            
-            .language-option {
-                color: #f0f0f0;
-            }
-            
-            .language-option:hover {
-                background: rgba(106, 17, 203, 0.3);
-            }
-            
-            .in-app-notification {
-                background: #333;
-                color: #f0f0f0;
-            }
+        .confirm-delete {
+            background: var(--accent);
+            color: white;
         }
     </style>
 </head>
 <body>
     <div class="app-container">
         <header class="app-header">
-            <div class="language-dropdown">
-                <button class="language-toggle" id="language-toggle">
-                    <span class="current-lang">العربية</span>
-                    <i class="fas fa-chevron-down"></i>
-                </button>
-                <div class="language-menu" id="language-menu">
-                    <div class="language-option active" data-lang="ar">العربية</div>
-                    <div class="language-option" data-lang="en">English</div>
-                    <div class="language-option" data-lang="de">Deutsch</div>
-                </div>
+            <div class="language-selector-container">
+                <select class="language-selector" id="language-selector">
+                    <option value="ar">العربية</option>
+                    <option value="en">English</option>
+                    <option value="de">Deutsch</option>
+                    <option value="tr">Türkçe</option>
+                </select>
             </div>
             <h1 class="app-title">Halima List</h1>
         </header>
 
         <div class="tabs-container">
-            <div class="tab active" data-tab="tasks">
+            <div class="tab active" data-tab="shopping">
+                <i class="fas fa-shopping-cart"></i>
+                <span class="tab-text" data-translate="shopping">المشتريات</span>
+            </div>
+            <div class="tab" data-tab="tasks">
                 <i class="fas fa-tasks"></i>
-                <span class="tab-text">المهام</span>
+                <span class="tab-text" data-translate="tasks">المهام</span>
             </div>
             <div class="tab" data-tab="appointments">
                 <i class="fas fa-calendar-alt"></i>
-                <span class="tab-text">المواعيد</span>
-            </div>
-            <div class="tab" data-tab="shopping">
-                <i class="fas fa-shopping-cart"></i>
-                <span class="tab-text">المشتريات</span>
+                <span class="tab-text" data-translate="appointments">المواعيد</span>
             </div>
         </div>
 
-        <!-- قسم المهام -->
-        <div id="tasks" class="tab-content active">
-            <div class="input-group">
-                <input type="text" id="task-input" placeholder="أضف مهمة جديدة" class="task-field">
-                <select id="priority-select" class="priority-field">
-                    <option value="low">أولوية منخفضة</option>
-                    <option value="medium" selected>أولوية متوسطة</option>
-                    <option value="high">أولوية عالية</option>
-                </select>
-                <button id="add-task" class="btn">
-                    <i class="fas fa-plus"></i>
-                    <span class="btn-text">إضافة مهمة</span>
-                </button>
-            </div>
-            <ul class="items-list" id="task-list">
-                <div class="empty-state">
-                    <i class="fas fa-clipboard-list empty-icon"></i>
-                    <p class="empty-text">لا توجد مهام حالية</p>
-                </div>
-            </ul>
-        </div>
-
-        <!-- قسم المواعيد -->
-        <div id="appointments" class="tab-content">
-            <div class="input-group">
-                <input type="text" id="appointment-input" placeholder="وصف الموعد" class="appointment-field">
-                <input type="text" id="appointment-date" placeholder="اختر التاريخ والوقت" class="date-field">
-                <button id="add-appointment" class="btn">
-                    <i class="fas fa-plus"></i>
-                    <span class="btn-text">إضافة موعد</span>
-                </button>
-            </div>
-            <ul class="items-list" id="appointment-list">
-                <div class="empty-state">
-                    <i class="fas fa-calendar-alt empty-icon"></i>
-                    <p class="empty-text">لا توجد مواعيد حالية</p>
-                </div>
-            </ul>
-        </div>
-
-        <!-- قسم المشتريات -->
-        <div id="shopping" class="tab-content">
+        <div id="shopping" class="tab-content active">
             <div class="input-group">
                 <div class="form-row">
-                    <input type="text" id="shopping-input" placeholder="اسم العنصر" class="shopping-field">
-                    <input type="number" id="shopping-quantity" placeholder="الكمية" min="1" value="1" class="quantity-field">
+                    <input type="text" id="shopping-input" placeholder="اسم العنصر" data-translate-placeholder="item_name">
+                    <input type="number" id="shopping-quantity" placeholder="الكمية" min="1" value="1" data-translate-placeholder="quantity">
                 </div>
                 <button id="add-shopping" class="btn">
                     <i class="fas fa-plus"></i>
-                    <span class="btn-text">إضافة للقائمة</span>
+                    <span data-translate="add_to_list">إضافة للقائمة</span>
                 </button>
             </div>
             <ul class="items-list" id="shopping-list">
                 <div class="empty-state">
-                    <i class="fas fa-shopping-cart empty-icon"></i>
-                    <p class="empty-text">لا توجد عناصر في القائمة</p>
+                    <i class="fas fa-shopping-cart"></i>
+                    <p data-translate="no_items">لا توجد عناصر في القائمة</p>
                 </div>
             </ul>
         </div>
-        
-        <button id="install-btn" class="btn install-btn">
-            <i class="fas fa-download"></i>
-            <span class="btn-text">تثبيت التطبيق</span>
-        </button>
+
+        <div id="tasks" class="tab-content">
+            <div class="input-group">
+                <input type="text" id="task-input" placeholder="أضف مهمة جديدة" data-translate-placeholder="add_new_task">
+                <select id="priority-select">
+                    <option value="low" data-translate="low_priority">أولوية منخفضة</option>
+                    <option value="medium" selected data-translate="medium_priority">أولوية متوسطة</option>
+                    <option value="high" data-translate="high_priority">أولوية عالية</option>
+                </select>
+                <button id="add-task" class="btn">
+                    <i class="fas fa-plus"></i>
+                    <span data-translate="add_task">إضافة مهمة</span>
+                </button>
+            </div>
+            <ul class="items-list" id="task-list">
+                <div class="empty-state">
+                    <i class="fas fa-clipboard-list"></i>
+                    <p data-translate="no_tasks">لا توجد مهام حالية</p>
+                </div>
+            </ul>
+        </div>
+
+        <div id="appointments" class="tab-content">
+            <div class="input-group">
+                <input type="text" id="appointment-input" placeholder="وصف الموعد" data-translate-placeholder="appointment_desc">
+                <input type="text" id="appointment-date" placeholder="اختر التاريخ والوقت" data-translate-placeholder="select_datetime">
+                <button id="add-appointment" class="btn">
+                    <i class="fas fa-plus"></i>
+                    <span data-translate="add_appointment">إضافة موعد</span>
+                </button>
+            </div>
+            <ul class="items-list" id="appointment-list">
+                <div class="empty-state">
+                    <i class="fas fa-calendar-alt"></i>
+                    <p data-translate="no_appointments">لا توجد مواعيد حالية</p>
+                </div>
+            </ul>
+        </div>
+    </div>
+
+    <div class="confirm-dialog" id="confirm-dialog">
+        <div class="confirm-content">
+            <h3 data-translate="confirm_delete">تأكيد الحذف</h3>
+            <p id="confirm-message" data-translate="confirm_delete_message">هل أنت متأكد أنك تريد حذف هذا العنصر؟</p>
+            <div class="confirm-buttons">
+                <button class="confirm-btn confirm-cancel" id="confirm-cancel" data-translate="cancel">إلغاء</button>
+                <button class="confirm-btn confirm-delete" id="confirm-delete" data-translate="delete">حذف</button>
+            </div>
+        </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script>
-        // بيانات الترجمة
+        // Translation dictionary
         const translations = {
             ar: {
-                appTitle: "Halima List",
-                tabs: ["المهام", "المواعيد", "المشتريات"],
-                taskPlaceholder: "أضف مهمة جديدة",
-                priorities: ["أولوية منخفضة", "أولوية متوسطة", "أولوية عالية"],
-                appointmentPlaceholder: "وصف الموعد",
-                datePlaceholder: "اختر التاريخ والوقت",
-                shoppingPlaceholder: "اسم العنصر",
-                quantityPlaceholder: "الكمية",
-                addButtons: ["إضافة مهمة", "إضافة موعد", "إضافة للقائمة"],
-                emptyStates: ["لا توجد مهام حالية", "لا توجد مواعيد حالية", "لا توجد عناصر في القائمة"],
-                priorityBadge: "أولوية",
-                timeBadge: "وقت",
-                quantityBadge: "كمية",
-                notificationTitle: "تذكير بالموعد",
-                notificationBody: "لديك موعد غدًا: ",
-                notificationSoon: "قريب!",
-                languageNames: {
-                    ar: "العربية",
-                    en: "English",
-                    de: "Deutsch"
-                },
-                installText: "تثبيت التطبيق"
+                shopping: "المشتريات",
+                tasks: "المهام",
+                appointments: "المواعيد",
+                item_name: "اسم العنصر",
+                quantity: "الكمية",
+                add_to_list: "إضافة للقائمة",
+                no_items: "لا توجد عناصر في القائمة",
+                add_new_task: "أضف مهمة جديدة",
+                low_priority: "أولوية منخفضة",
+                medium_priority: "أولوية متوسطة",
+                high_priority: "أولوية عالية",
+                add_task: "إضافة مهمة",
+                no_tasks: "لا توجد مهام حالية",
+                appointment_desc: "وصف الموعد",
+                select_datetime: "اختر التاريخ والوقت",
+                add_appointment: "إضافة موعد",
+                no_appointments: "لا توجد مواعيد حالية",
+                confirm_delete: "تأكيد الحذف",
+                confirm_delete_message: "هل أنت متأكد أنك تريد حذف هذا العنصر؟",
+                cancel: "إلغاء",
+                delete: "حذف"
             },
             en: {
-                appTitle: "Halima List",
-                tabs: ["Tasks", "Appointments", "Shopping"],
-                taskPlaceholder: "Add new task",
-                priorities: ["Low Priority", "Medium Priority", "High Priority"],
-                appointmentPlaceholder: "Appointment description",
-                datePlaceholder: "Select date & time",
-                shoppingPlaceholder: "Item name",
-                quantityPlaceholder: "Quantity",
-                addButtons: ["Add Task", "Add Appointment", "Add to List"],
-                emptyStates: ["No tasks yet", "No appointments yet", "No items in list"],
-                priorityBadge: "Priority",
-                timeBadge: "Time",
-                quantityBadge: "Qty",
-                notificationTitle: "Appointment Reminder",
-                notificationBody: "You have an appointment tomorrow: ",
-                notificationSoon: "Soon!",
-                languageNames: {
-                    ar: "Arabic",
-                    en: "English",
-                    de: "German"
-                },
-                installText: "Install App"
+                shopping: "Shopping",
+                tasks: "Tasks",
+                appointments: "Appointments",
+                item_name: "Item name",
+                quantity: "Quantity",
+                add_to_list: "Add to list",
+                no_items: "No items in the list",
+                add_new_task: "Add new task",
+                low_priority: "Low priority",
+                medium_priority: "Medium priority",
+                high_priority: "High priority",
+                add_task: "Add task",
+                no_tasks: "No current tasks",
+                appointment_desc: "Appointment description",
+                select_datetime: "Select date & time",
+                add_appointment: "Add appointment",
+                no_appointments: "No current appointments",
+                confirm_delete: "Confirm deletion",
+                confirm_delete_message: "Are you sure you want to delete this item?",
+                cancel: "Cancel",
+                delete: "Delete"
             },
             de: {
-                appTitle: "Halima List",
-                tabs: ["Aufgaben", "Termine", "Einkaufen"],
-                taskPlaceholder: "Neue Aufgabe hinzufügen",
-                priorities: ["Niedrige Priorität", "Mittlere Priorität", "Hohe Priorität"],
-                appointmentPlaceholder: "Terminbeschreibung",
-                datePlaceholder: "Datum & Uhrzeit wählen",
-                shoppingPlaceholder: "Artikelname",
-                quantityPlaceholder: "Menge",
-                addButtons: ["Aufgabe hinzufügen", "Termin hinzufügen", "Zur Liste hinzufügen"],
-                emptyStates: ["Keine Aufgaben vorhanden", "Keine Termine vorhanden", "Keine Artikel in der Liste"],
-                priorityBadge: "Priorität",
-                timeBadge: "Zeit",
-                quantityBadge: "Anz",
-                notificationTitle: "Terminerinnerung",
-                notificationBody: "Sie haben morgen einen Termin: ",
-                notificationSoon: "Bald!",
-                languageNames: {
-                    ar: "Arabisch",
-                    en: "Englisch",
-                    de: "Deutsch"
-                },
-                installText: "App installieren"
+                shopping: "Einkaufen",
+                tasks: "Aufgaben",
+                appointments: "Termine",
+                item_name: "Artikelname",
+                quantity: "Menge",
+                add_to_list: "Zur Liste hinzufügen",
+                no_items: "Keine Artikel in der Liste",
+                add_new_task: "Neue Aufgabe hinzufügen",
+                low_priority: "Niedrige Priorität",
+                medium_priority: "Mittlere Priorität",
+                high_priority: "Hohe Priorität",
+                add_task: "Aufgabe hinzufügen",
+                no_tasks: "Keine aktuellen Aufgaben",
+                appointment_desc: "Terminbeschreibung",
+                select_datetime: "Datum & Uhrzeit auswählen",
+                add_appointment: "Termin hinzufügen",
+                no_appointments: "Keine aktuellen Termine",
+                confirm_delete: "Löschen bestätigen",
+                confirm_delete_message: "Sind Sie sicher, dass Sie diesen Artikel löschen möchten?",
+                cancel: "Abbrechen",
+                delete: "Löschen"
+            },
+            tr: {
+                shopping: "Alışveriş",
+                tasks: "Görevler",
+                appointments: "Randevular",
+                item_name: "Öğe adı",
+                quantity: "Miktar",
+                add_to_list: "Listeye ekle",
+                no_items: "Listede öğe yok",
+                add_new_task: "Yeni görev ekle",
+                low_priority: "Düşük öncelik",
+                medium_priority: "Orta öncelik",
+                high_priority: "Yüksek öncelik",
+                add_task: "Görev ekle",
+                no_tasks: "Mevcut görev yok",
+                appointment_desc: "Randevu açıklaması",
+                select_datetime: "Tarih ve saat seçin",
+                add_appointment: "Randevu ekle",
+                no_appointments: "Mevcut randevu yok",
+                confirm_delete: "Silme onayı",
+                confirm_delete_message: "Bu öğeyi silmek istediğinizden emin misiniz?",
+                cancel: "İptal",
+                delete: "Sil"
             }
         };
 
-        // تهيئة التطبيق
-        document.addEventListener('DOMContentLoaded', () => {
-            // تهيئة منتقي التاريخ
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize date picker
             flatpickr("#appointment-date", {
                 enableTime: true,
                 dateFormat: "Y-m-d H:i",
-                time_24hr: true,
-                locale: document.documentElement.lang === "ar" ? "ar" : "en"
+                time_24hr: true
             });
 
-            // تحميل البيانات
-            const appData = {
-                tasks: JSON.parse(localStorage.getItem('halima-tasks')) || [],
-                appointments: JSON.parse(localStorage.getItem('halima-appointments')) || [],
-                shoppingList: JSON.parse(localStorage.getItem('halima-shopping')) || [],
-                language: localStorage.getItem('halima-lang') || 'ar',
-                notificationTimeouts: {},
-                notificationIds: {}
+            // Language selector functionality
+            const languageSelector = document.getElementById('language-selector');
+            const savedLanguage = localStorage.getItem('appLanguage') || 'ar';
+            
+            // Set saved language
+            languageSelector.value = savedLanguage;
+            updateTranslations(savedLanguage);
+            
+            // Change language direction based on selection
+            if(savedLanguage === 'ar') {
+                document.documentElement.dir = 'rtl';
+                document.documentElement.lang = 'ar';
+            } else {
+                document.documentElement.dir = 'ltr';
+                document.documentElement.lang = savedLanguage;
+            }
+            
+            // Save language preference when changed
+            languageSelector.addEventListener('change', function() {
+                const selectedLanguage = this.value;
+                localStorage.setItem('appLanguage', selectedLanguage);
+                
+                if(selectedLanguage === 'ar') {
+                    document.documentElement.dir = 'rtl';
+                    document.documentElement.lang = 'ar';
+                } else {
+                    document.documentElement.dir = 'ltr';
+                    document.documentElement.lang = selectedLanguage;
+                }
+                
+                updateTranslations(selectedLanguage);
+            });
+
+            // Function to update all translations
+            function updateTranslations(lang) {
+                // Update elements with data-translate attribute
+                document.querySelectorAll('[data-translate]').forEach(el => {
+                    const key = el.getAttribute('data-translate');
+                    if(translations[lang][key]) {
+                        el.textContent = translations[lang][key];
+                    }
+                });
+
+                // Update placeholder texts
+                document.querySelectorAll('[data-translate-placeholder]').forEach(el => {
+                    const key = el.getAttribute('data-translate-placeholder');
+                    if(translations[lang][key]) {
+                        el.setAttribute('placeholder', translations[lang][key]);
+                    }
+                });
+
+                // Update select options
+                document.querySelectorAll('option[data-translate]').forEach(el => {
+                    const key = el.getAttribute('data-translate');
+                    if(translations[lang][key]) {
+                        el.textContent = translations[lang][key];
+                    }
+                });
+            }
+
+            // Tab switching
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                    
+                    this.classList.add('active');
+                    document.getElementById(this.dataset.tab).classList.add('active');
+                });
+            });
+
+            // Data storage
+            let appData = {
+                tasks: JSON.parse(localStorage.getItem('tasks')) || [],
+                appointments: JSON.parse(localStorage.getItem('appointments')) || [],
+                shopping: JSON.parse(localStorage.getItem('shopping')) || []
             };
 
-            // تسجيل Service Worker
-            if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.register('sw.js')
-                    .then(registration => {
-                        console.log('ServiceWorker registration successful');
-                    })
-                    .catch(err => {
-                        console.log('ServiceWorker registration failed: ', err);
-                    });
+            function saveData() {
+                localStorage.setItem('tasks', JSON.stringify(appData.tasks));
+                localStorage.setItem('appointments', JSON.stringify(appData.appointments));
+                localStorage.setItem('shopping', JSON.stringify(appData.shopping));
             }
 
-            // عرض زر التثبيت
-            let deferredPrompt;
-            const installBtn = document.getElementById('install-btn');
-            
-            window.addEventListener('beforeinstallprompt', (e) => {
-                e.preventDefault();
-                deferredPrompt = e;
-                installBtn.style.display = 'flex';
-                
-                installBtn.addEventListener('click', () => {
-                    installBtn.style.display = 'none';
-                    deferredPrompt.prompt();
-                    deferredPrompt.userChoice.then((choiceResult) => {
-                        if (choiceResult.outcome === 'accepted') {
-                            console.log('User accepted the install prompt');
-                        } else {
-                            console.log('User dismissed the install prompt');
-                        }
-                        deferredPrompt = null;
-                    });
-                });
-            });
-
-            // تطبيق اللغة المختارة
-            setLanguage(appData.language);
-
-            // إدارة القائمة المنسدلة للغة
-            const languageToggle = document.getElementById('language-toggle');
-            const languageMenu = document.getElementById('language-menu');
-            
-            languageToggle.addEventListener('click', (e) => {
-                e.stopPropagation();
-                languageMenu.classList.toggle('open');
-                languageToggle.classList.toggle('open');
-            });
-            
-            // إغلاق القائمة عند النقر خارجها
-            document.addEventListener('click', () => {
-                languageMenu.classList.remove('open');
-                languageToggle.classList.remove('open');
-            });
-            
-            // منع إغلاق القائمة عند النقر داخلها
-            languageMenu.addEventListener('click', (e) => {
-                e.stopPropagation();
-            });
-
-            // إدارة التبويبات
-            document.querySelectorAll('.tab').forEach(tab => {
-                tab.addEventListener('click', () => {
-                    const tabId = tab.dataset.tab;
-                    
-                    // تحديث الواجهة
-                    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-                    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-                    
-                    tab.classList.add('active');
-                    document.getElementById(tabId).classList.add('active');
-                });
-            });
-
-            // إضافة مهمة
-            document.getElementById('add-task').addEventListener('click', addTask);
-            document.getElementById('task-input').addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') addTask();
-            });
-
-            function addTask() {
-                const input = document.getElementById('task-input');
-                const text = input.value.trim();
-                const priority = document.getElementById('priority-select').value;
-                
-                if (text) {
-                    appData.tasks.push({
-                        id: Date.now(),
-                        text,
-                        priority,
-                        completed: false,
-                        createdAt: new Date().toISOString()
-                    });
-                    
-                    saveData();
-                    renderTasks();
-                    input.value = '';
-                    input.focus();
-                }
-            }
-
-            // إضافة موعد
-            document.getElementById('add-appointment').addEventListener('click', addAppointment);
-            document.getElementById('appointment-input').addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') addAppointment();
-            });
-
-            function addAppointment() {
-                const input = document.getElementById('appointment-input');
-                const text = input.value.trim();
-                const datetime = document.getElementById('appointment-date').value;
-                
-                if (text && datetime) {
-                    const newAppointment = {
-                        id: Date.now(),
-                        text,
-                        datetime,
-                        completed: false,
-                        createdAt: new Date().toISOString(),
-                        notified: false
-                    };
-                    
-                    appData.appointments.push(newAppointment);
-                    
-                    // جدولة الإشعار
-                    scheduleNotification(newAppointment);
-                    
-                    saveData();
-                    renderAppointments();
-                    input.value = '';
-                    document.getElementById('appointment-date').value = '';
-                    input.focus();
-                }
-            }
-
-            // جدولة الإشعار قبل يوم من الموعد
-            function scheduleNotification(appointment) {
-                // إلغاء أي إشعارات سابقة لهذا الموعد
-                if (appData.notificationTimeouts[appointment.id]) {
-                    clearTimeout(appData.notificationTimeouts[appointment.id]);
-                    delete appData.notificationTimeouts[appointment.id];
-                }
-                
-                const appointmentDate = new Date(appointment.datetime);
-                const now = new Date();
-                const timeDiff = appointmentDate - now;
-                
-                // إذا كان الموعد في المستقبل
-                if (timeDiff > 0) {
-                    // وقت الإشعار (قبل 24 ساعة من الموعد)
-                    const notificationTime = new Date(appointmentDate.getTime() - 24 * 60 * 60 * 1000);
-                    
-                    // الوقت المتبقي حتى الإشعار
-                    const timeUntilNotification = notificationTime - now;
-                    
-                    // إذا كان وقت الإشعار في المستقبل
-                    if (timeUntilNotification > 0) {
-                        appData.notificationTimeouts[appointment.id] = setTimeout(() => {
-                            showNotification(appointment);
-                            // تحديث حالة الإشعار
-                            const appIndex = appData.appointments.findIndex(a => a.id === appointment.id);
-                            if (appIndex !== -1) {
-                                appData.appointments[appIndex].notified = true;
-                                saveData();
-                                renderAppointments();
-                            }
-                        }, timeUntilNotification);
-                    }
-                }
-            }
-
-            // عرض الإشعار
-            function showNotification(appointment) {
-                // طلب إذن الإشعارات إذا لم يكن مسموحًا بالفعل
-                if (Notification.permission !== "granted") {
-                    Notification.requestPermission().then(permission => {
-                        if (permission === "granted") {
-                            createNotification(appointment);
-                        }
-                    });
-                } else {
-                    createNotification(appointment);
-                }
-                
-                // إضافة إشعار محلي إذا كان التطبيق مفتوحًا
-                showInAppNotification(appointment);
-            }
-
-            function createNotification(appointment) {
-                const lang = appData.language;
-                const notification = new Notification(translations[lang].notificationTitle, {
-                    body: translations[lang].notificationBody + appointment.text,
-                    icon: 'icons/icon-192.png',
-                    vibrate: [200, 100, 200],
-                    tag: 'halima-appointment-' + appointment.id
-                });
-                
-                notification.onclick = () => {
-                    window.focus();
-                    // عرض تبويب المواعيد
-                    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-                    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-                    
-                    document.querySelector('[data-tab="appointments"]').classList.add('active');
-                    document.getElementById('appointments').classList.add('active');
-                };
-            }
-
-            // عرض إشعار داخل التطبيق
-            function showInAppNotification(appointment) {
-                const lang = appData.language;
-                const notificationId = 'notification-' + Date.now();
-                
-                // إنشاء عنصر الإشعار
-                const notification = document.createElement('div');
-                notification.id = notificationId;
-                notification.className = 'in-app-notification';
-                notification.innerHTML = `
-                    <div>
-                        <strong>${translations[lang].notificationTitle}</strong>
-                        <p>${translations[lang].notificationBody}${appointment.text}</p>
-                    </div>
-                    <button class="close-notification">
-                        &times;
-                    </button>
-                `;
-                
-                document.body.appendChild(notification);
-                
-                // إغلاق الإشعار عند النقر على الزر
-                notification.querySelector('.close-notification').addEventListener('click', () => {
-                    notification.remove();
-                });
-                
-                // إغلاق الإشعار تلقائيًا بعد 5 ثوان
-                setTimeout(() => {
-                    if (document.getElementById(notificationId)) {
-                        notification.remove();
-                    }
-                }, 5000);
-                
-                // حفظ معرف الإشعار
-                appData.notificationIds[appointment.id] = notificationId;
-            }
-
-            // إضافة مشتريات
+            // Shopping functionality
             document.getElementById('add-shopping').addEventListener('click', addShoppingItem);
-            document.getElementById('shopping-input').addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') addShoppingItem();
-            });
-
+            
             function addShoppingItem() {
-                const input = document.getElementById('shopping-input');
-                const text = input.value.trim();
-                const quantity = document.getElementById('shopping-quantity').value || 1;
+                const name = document.getElementById('shopping-input').value.trim();
+                const quantity = document.getElementById('shopping-quantity').value;
                 
-                if (text) {
-                    appData.shoppingList.push({
+                if (name) {
+                    appData.shopping.push({
                         id: Date.now(),
-                        text,
+                        name,
                         quantity,
-                        purchased: false,
-                        createdAt: new Date().toISOString()
+                        purchased: false
                     });
                     
                     saveData();
                     renderShoppingList();
-                    input.value = '';
-                    document.getElementById('shopping-quantity').value = 1;
-                    input.focus();
+                    document.getElementById('shopping-input').value = '';
                 }
             }
-
-            // عرض المهام
-            function renderTasks() {
-                const list = document.getElementById('task-list');
-                
-                if (appData.tasks.length === 0) {
-                    list.innerHTML = `
-                        <div class="empty-state">
-                            <i class="fas fa-clipboard-list empty-icon"></i>
-                            <p class="empty-text">${translations[appData.language].emptyStates[0]}</p>
-                        </div>
-                    `;
-                    return;
-                }
-                
-                list.innerHTML = '';
-                appData.tasks.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).forEach(task => {
-                    const li = document.createElement('li');
-                    li.className = `item task-item ${task.priority}-priority ${task.completed ? 'completed' : ''}`;
-                    li.innerHTML = `
-                        <input type="checkbox" class="item-checkbox" ${task.completed ? 'checked' : ''} data-id="${task.id}">
-                        <div class="item-content">
-                            <div class="item-title">${task.text}</div>
-                            <div class="item-details">
-                                <span class="item-badge task-priority-${task.priority}">${translations[appData.language].priorityBadge}: ${getPriorityText(task.priority, appData.language)}</span>
-                            </div>
-                        </div>
-                        <div class="item-actions">
-                            <button class="action-btn delete-btn" data-id="${task.id}">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </div>
-                    `;
-                    list.appendChild(li);
-                    
-                    // إضافة معالج الأحداث
-                    li.querySelector('.item-checkbox').addEventListener('change', function() {
-                        const taskId = parseInt(this.dataset.id);
-                        const task = appData.tasks.find(t => t.id === taskId);
-                        if (task) {
-                            task.completed = this.checked;
-                            saveData();
-                            renderTasks();
-                        }
-                    });
-                    
-                    li.querySelector('.delete-btn').addEventListener('click', function() {
-                        const taskId = parseInt(this.dataset.id);
-                        appData.tasks = appData.tasks.filter(t => t.id !== taskId);
-                        saveData();
-                        renderTasks();
-                    });
-                });
-            }
-
-            // عرض المواعيد
-            function renderAppointments() {
-                const list = document.getElementById('appointment-list');
-                
-                if (appData.appointments.length === 0) {
-                    list.innerHTML = `
-                        <div class="empty-state">
-                            <i class="fas fa-calendar-alt empty-icon"></i>
-                            <p class="empty-text">${translations[appData.language].emptyStates[1]}</p>
-                        </div>
-                    `;
-                    return;
-                }
-                
-                list.innerHTML = '';
-                appData.appointments.sort((a, b) => new Date(a.datetime) - new Date(b.datetime)).forEach(app => {
-                    const li = document.createElement('li');
-                    const now = new Date();
-                    const appDate = new Date(app.datetime);
-                    const timeDiff = appDate - now;
-                    const oneDay = 24 * 60 * 60 * 1000;
-                    
-                    // تحديد إذا كان الموعد قريب (خلال 24 ساعة) ولم يتم الإشعار به بعد
-                    const isUpcoming = timeDiff > 0 && timeDiff <= oneDay && !app.notified;
-                    
-                    li.className = `item appointment-item ${app.completed ? 'completed' : ''} ${isUpcoming ? 'upcoming' : ''}`;
-                    li.innerHTML = `
-                        <input type="checkbox" class="item-checkbox" ${app.completed ? 'checked' : ''} data-id="${app.id}">
-                        <div class="item-content">
-                            <div class="item-title">${app.text}</div>
-                            <div class="item-details">
-                                <span class="item-badge appointment-time">${translations[appData.language].timeBadge}: ${formatDateTime(app.datetime, appData.language)}</span>
-                                ${isUpcoming ? `<span class="item-badge notification-badge">${translations[appData.language].notificationSoon}</span>` : ''}
-                            </div>
-                        </div>
-                        <div class="item-actions">
-                            <button class="action-btn delete-btn" data-id="${app.id}">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </div>
-                    `;
-                    list.appendChild(li);
-                    
-                    // إضافة معالج الأحداث
-                    li.querySelector('.item-checkbox').addEventListener('change', function() {
-                        const appId = parseInt(this.dataset.id);
-                        const app = appData.appointments.find(a => a.id === appId);
-                        if (app) {
-                            app.completed = this.checked;
-                            saveData();
-                            renderAppointments();
-                        }
-                    });
-                    
-                    li.querySelector('.delete-btn').addEventListener('click', function() {
-                        const appId = parseInt(this.dataset.id);
-                        appData.appointments = appData.appointments.filter(a => a.id !== appId);
-                        
-                        // إلغاء أي إشعارات مرتبطة بهذا الموعد
-                        if (appData.notificationTimeouts[appId]) {
-                            clearTimeout(appData.notificationTimeouts[appId]);
-                            delete appData.notificationTimeouts[appId];
-                        }
-                        
-                        // إزالة أي إشعارات داخل التطبيق
-                        if (appData.notificationIds[appId]) {
-                            const notification = document.getElementById(appData.notificationIds[appId]);
-                            if (notification) notification.remove();
-                            delete appData.notificationIds[appId];
-                        }
-                        
-                        saveData();
-                        renderAppointments();
-                    });
-                });
-            }
-
-            // عرض المشتريات
+            
             function renderShoppingList() {
                 const list = document.getElementById('shopping-list');
                 
-                if (appData.shoppingList.length === 0) {
+                if (appData.shopping.length === 0) {
                     list.innerHTML = `
                         <div class="empty-state">
-                            <i class="fas fa-shopping-cart empty-icon"></i>
-                            <p class="empty-text">${translations[appData.language].emptyStates[2]}</p>
+                            <i class="fas fa-shopping-cart"></i>
+                            <p data-translate="no_items">${translations[languageSelector.value]['no_items']}</p>
                         </div>
                     `;
                     return;
                 }
                 
                 list.innerHTML = '';
-                appData.shoppingList.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).forEach(item => {
+                appData.shopping.forEach(item => {
                     const li = document.createElement('li');
-                    li.className = `item shopping-item ${item.purchased ? 'completed' : ''}`;
+                    li.className = 'item shopping-item';
                     li.innerHTML = `
                         <input type="checkbox" class="item-checkbox" ${item.purchased ? 'checked' : ''} data-id="${item.id}">
                         <div class="item-content">
-                            <div class="item-title">${item.text}</div>
+                            <div class="item-title">${item.name}</div>
                             <div class="item-details">
-                                <span class="item-badge shopping-quantity">${translations[appData.language].quantityBadge}: ${item.quantity}</span>
+                                <span class="item-badge">${translations[languageSelector.value]['quantity']}: ${item.quantity}</span>
                             </div>
                         </div>
                         <div class="item-actions">
@@ -1139,180 +614,210 @@
                     `;
                     list.appendChild(li);
                     
-                    // إضافة معالج الأحداث
                     li.querySelector('.item-checkbox').addEventListener('change', function() {
-                        const itemId = parseInt(this.dataset.id);
-                        const item = appData.shoppingList.find(i => i.id === itemId);
+                        const item = appData.shopping.find(i => i.id == this.dataset.id);
                         if (item) {
                             item.purchased = this.checked;
                             saveData();
-                            renderShoppingList();
                         }
                     });
                     
                     li.querySelector('.delete-btn').addEventListener('click', function() {
-                        const itemId = parseInt(this.dataset.id);
-                        appData.shoppingList = appData.shoppingList.filter(i => i.id !== itemId);
-                        saveData();
-                        renderShoppingList();
+                        showConfirmDialog(this.dataset.id, 'shopping', 
+                            appData.shopping.find(i => i.id == this.dataset.id).name);
                     });
                 });
             }
 
-            // وظائف مساعدة
-            function getPriorityText(priority, lang) {
-                const priorityTexts = {
-                    low: translations[lang].priorities[0],
-                    medium: translations[lang].priorities[1],
-                    high: translations[lang].priorities[2]
-                };
-                return priorityTexts[priority] || '';
-            }
-
-            function formatDateTime(datetime, lang) {
-                const options = {
-                    year: 'numeric',
-                    month: 'short',
-                    day: 'numeric',
-                    hour: '2-digit',
-                    minute: '2-digit'
-                };
+            // Tasks functionality
+            document.getElementById('add-task').addEventListener('click', addTask);
+            
+            function addTask() {
+                const text = document.getElementById('task-input').value.trim();
+                const priority = document.getElementById('priority-select').value;
                 
-                if (lang === 'ar') {
-                    options.weekday = 'long';
+                if (text) {
+                    appData.tasks.push({
+                        id: Date.now(),
+                        text,
+                        priority,
+                        completed: false
+                    });
+                    
+                    saveData();
+                    renderTasks();
+                    document.getElementById('task-input').value = '';
+                }
+            }
+            
+            function renderTasks() {
+                const list = document.getElementById('task-list');
+                
+                if (appData.tasks.length === 0) {
+                    list.innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-clipboard-list"></i>
+                            <p data-translate="no_tasks">${translations[languageSelector.value]['no_tasks']}</p>
+                        </div>
+                    `;
+                    return;
                 }
                 
-                return new Date(datetime).toLocaleDateString(lang === 'ar' ? 'ar-EG' : lang === 'de' ? 'de-DE' : 'en-US', options);
-            }
-
-            function saveData() {
-                localStorage.setItem('halima-tasks', JSON.stringify(appData.tasks));
-                localStorage.setItem('halima-appointments', JSON.stringify(appData.appointments));
-                localStorage.setItem('halima-shopping', JSON.stringify(appData.shoppingList));
-            }
-
-            // تبديل اللغة
-            document.querySelectorAll('.language-option').forEach(option => {
-                option.addEventListener('click', function() {
-                    const lang = this.dataset.lang;
-                    appData.language = lang;
-                    localStorage.setItem('halima-lang', lang);
-                    setLanguage(lang);
+                list.innerHTML = '';
+                appData.tasks.forEach(task => {
+                    const li = document.createElement('li');
+                    li.className = `item task-item ${task.priority}-priority ${task.completed ? 'completed' : ''}`;
+                    li.innerHTML = `
+                        <input type="checkbox" class="item-checkbox" ${task.completed ? 'checked' : ''} data-id="${task.id}">
+                        <div class="item-content">
+                            <div class="item-title">${task.text}</div>
+                            <div class="item-details">
+                                <span class="item-badge">${translations[languageSelector.value]['priority']}: ${getPriorityText(task.priority)}</span>
+                            </div>
+                        </div>
+                        <div class="item-actions">
+                            <button class="action-btn delete-btn" data-id="${task.id}">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    `;
+                    list.appendChild(li);
                     
-                    // تحديث القائمة المنسدلة
-                    document.querySelectorAll('.language-option').forEach(opt => {
-                        opt.classList.remove('active');
+                    li.querySelector('.item-checkbox').addEventListener('change', function() {
+                        const task = appData.tasks.find(t => t.id == this.dataset.id);
+                        if (task) {
+                            task.completed = this.checked;
+                            saveData();
+                            renderTasks();
+                        }
                     });
-                    this.classList.add('active');
-                    document.querySelector('.current-lang').textContent = translations[lang].languageNames[lang];
                     
-                    // إغلاق القائمة
-                    languageMenu.classList.remove('open');
-                    languageToggle.classList.remove('open');
+                    li.querySelector('.delete-btn').addEventListener('click', function() {
+                        showConfirmDialog(this.dataset.id, 'task', task.text);
+                    });
                 });
+            }
+            
+            function getPriorityText(priority) {
+                const texts = {
+                    'low': translations[languageSelector.value]['low_priority'],
+                    'medium': translations[languageSelector.value]['medium_priority'],
+                    'high': translations[languageSelector.value]['high_priority']
+                };
+                return texts[priority] || '';
+            }
+
+            // Appointments functionality
+            document.getElementById('add-appointment').addEventListener('click', addAppointment);
+            
+            function addAppointment() {
+                const text = document.getElementById('appointment-input').value.trim();
+                const datetime = document.getElementById('appointment-date').value;
+                
+                if (text && datetime) {
+                    appData.appointments.push({
+                        id: Date.now(),
+                        text,
+                        datetime,
+                        notified: false
+                    });
+                    
+                    saveData();
+                    renderAppointments();
+                    document.getElementById('appointment-input').value = '';
+                    document.getElementById('appointment-date').value = '';
+                }
+            }
+            
+            function renderAppointments() {
+                const list = document.getElementById('appointment-list');
+                
+                if (appData.appointments.length === 0) {
+                    list.innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-calendar-alt"></i>
+                            <p data-translate="no_appointments">${translations[languageSelector.value]['no_appointments']}</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                list.innerHTML = '';
+                appData.appointments.forEach(app => {
+                    const li = document.createElement('li');
+                    li.className = 'item appointment-item';
+                    li.innerHTML = `
+                        <div class="item-content">
+                            <div class="item-title">${app.text}</div>
+                            <div class="item-details">
+                                <span class="item-badge">${formatDateTime(app.datetime)}</span>
+                            </div>
+                        </div>
+                        <div class="item-actions">
+                            <button class="action-btn delete-btn" data-id="${app.id}">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    `;
+                    list.appendChild(li);
+                    
+                    li.querySelector('.delete-btn').addEventListener('click', function() {
+                        showConfirmDialog(this.dataset.id, 'appointment', app.text);
+                    });
+                });
+            }
+            
+            function formatDateTime(datetime) {
+                const date = new Date(datetime);
+                return date.toLocaleString(languageSelector.value);
+            }
+
+            // Confirmation dialog
+            const confirmDialog = document.getElementById('confirm-dialog');
+            let currentItemToDelete = null;
+            let currentListType = null;
+            
+            function showConfirmDialog(id, type, name) {
+                currentItemToDelete = id;
+                currentListType = type;
+                document.getElementById('confirm-message').textContent = 
+                    `${translations[languageSelector.value]['confirm_delete_message']} "${name}"?`;
+                confirmDialog.style.display = 'flex';
+                
+                // Update dialog texts
+                document.querySelector('#confirm-dialog h3').textContent = 
+                    translations[languageSelector.value]['confirm_delete'];
+                document.getElementById('confirm-cancel').textContent = 
+                    translations[languageSelector.value]['cancel'];
+                document.getElementById('confirm-delete').textContent = 
+                    translations[languageSelector.value]['delete'];
+            }
+            
+            document.getElementById('confirm-cancel').addEventListener('click', function() {
+                confirmDialog.style.display = 'none';
+            });
+            
+            document.getElementById('confirm-delete').addEventListener('click', function() {
+                if (currentItemToDelete && currentListType) {
+                    if (currentListType === 'task') {
+                        appData.tasks = appData.tasks.filter(t => t.id != currentItemToDelete);
+                        renderTasks();
+                    } else if (currentListType === 'appointment') {
+                        appData.appointments = appData.appointments.filter(a => a.id != currentItemToDelete);
+                        renderAppointments();
+                    } else if (currentListType === 'shopping') {
+                        appData.shopping = appData.shopping.filter(i => i.id != currentItemToDelete);
+                        renderShoppingList();
+                    }
+                    saveData();
+                }
+                confirmDialog.style.display = 'none';
             });
 
-            function setLanguage(lang) {
-                // تحديث لغة الصفحة
-                document.documentElement.lang = lang;
-                document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
-                
-                // تحديث الترويسة
-                document.querySelector('.app-title').textContent = translations[lang].appTitle;
-                
-                // تحديث التبويبات
-                document.querySelectorAll('.tab-text').forEach((tab, index) => {
-                    tab.textContent = translations[lang].tabs[index];
-                });
-                
-                // تحديث حقول الإدخال
-                document.querySelector('.task-field').placeholder = translations[lang].taskPlaceholder;
-                document.querySelector('.priority-field').innerHTML = `
-                    <option value="low">${translations[lang].priorities[0]}</option>
-                    <option value="medium" selected>${translations[lang].priorities[1]}</option>
-                    <option value="high">${translations[lang].priorities[2]}</option>
-                `;
-                document.querySelector('.appointment-field').placeholder = translations[lang].appointmentPlaceholder;
-                document.querySelector('.date-field').placeholder = translations[lang].datePlaceholder;
-                document.querySelector('.shopping-field').placeholder = translations[lang].shoppingPlaceholder;
-                document.querySelector('.quantity-field').placeholder = translations[lang].quantityPlaceholder;
-                
-                // تحديث أزرار الإضافة
-                document.querySelectorAll('.btn-text').forEach((btn, index) => {
-                    btn.textContent = translations[lang].addButtons[index];
-                });
-                
-                // تحديث النصوص الفارغة
-                document.querySelectorAll('.empty-text').forEach((empty, index) => {
-                    empty.textContent = translations[lang].emptyStates[index];
-                });
-                
-                // تحديث زر التثبيت
-                document.querySelector('#install-btn .btn-text').textContent = translations[lang].installText;
-                
-                // إعادة عرض البيانات
-                renderTasks();
-                renderAppointments();
-                renderShoppingList();
-                
-                // إعادة تهيئة منتقي التاريخ
-                flatpickr("#appointment-date", {
-                    enableTime: true,
-                    dateFormat: "Y-m-d H:i",
-                    time_24hr: true,
-                    locale: lang === "ar" ? "ar" : "en"
-                });
-            }
-
-            // جدولة الإشعارات للمواعيد الحالية عند تحميل الصفحة
-            function scheduleExistingAppointments() {
-                appData.appointments.forEach(appointment => {
-                    // جدولة الإشعار فقط إذا لم يتم الإشعار به بالفعل
-                    if (!appointment.notified) {
-                        scheduleNotification(appointment);
-                    }
-                });
-            }
-
-            // التهيئة الأولية
+            // Initial render
+            renderShoppingList();
             renderTasks();
             renderAppointments();
-            renderShoppingList();
-            scheduleExistingAppointments();
-            
-            // طلب إذن الإشعارات عند تحميل الصفحة
-            if (Notification.permission !== "granted") {
-                Notification.requestPermission();
-            }
-        });
-    </script>
-    
-    <script>
-        // Service Worker (يجب حفظه في ملف sw.js منفصل)
-        const CACHE_NAME = 'halima-list-v1';
-        const ASSETS = [
-            '/',
-            '/index.html',
-            '/styles.css',
-            '/app.js',
-            'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css',
-            'https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css',
-            'icons/icon-192.png',
-            'icons/icon-512.png'
-        ];
-
-        self.addEventListener('install', (e) => {
-            e.waitUntil(
-                caches.open(CACHE_NAME)
-                    .then(cache => cache.addAll(ASSETS))
-            );
-        });
-
-        self.addEventListener('fetch', (e) => {
-            e.respondWith(
-                caches.match(e.request)
-                    .then(response => response || fetch(e.request))
-            );
         });
     </script>
 </body>
